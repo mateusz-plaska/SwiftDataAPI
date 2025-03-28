@@ -28,6 +28,11 @@ public class HandleResult {
         return switch (error) {
             case SwiftCodeError.SwiftCodeNotFoundById e -> new ErrorWrapper(
                     "Swift code of id: " + e.id() + " not found", onSuccess, uri, HttpStatus.NOT_FOUND);
+            case SwiftCodeError.CountryNotFoundByCountryISO2 e -> new ErrorWrapper(
+                    "Country of countryISO2code: " + e.countryISO2code() + " not found",
+                    onSuccess,
+                    uri,
+                    HttpStatus.NOT_FOUND);
         };
     }
 }

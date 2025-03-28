@@ -1,4 +1,4 @@
-package org.parser.swiftdata.swift_codes.parser;
+package org.parser.swiftdata.infrastructure.parser;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -7,8 +7,8 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.parser.swiftdata.swift_codes.data.SwiftCode;
-import org.parser.swiftdata.swift_codes.data.SwiftCodeRepository;
+import org.parser.swiftdata.infrastructure.data.SwiftCode;
+import org.parser.swiftdata.infrastructure.data.SwiftCodeRepository;
 import org.springframework.stereotype.Service;
 
 @Service

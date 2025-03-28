@@ -28,7 +28,7 @@ public class SwiftCode {
     private String address;
 
     @Column(name = "country_iso2", nullable = false, length = 2)
-    private String countryIso2;
+    private String countryISO2;
 
     @Column(name = "country_name", nullable = false)
     private String countryName;
