@@ -1,7 +1,7 @@
 package org.parser.swiftdata;
 
 import java.io.File;
-import org.parser.swiftdata.swift_codes.parser.SwiftCodeParserService;
+import org.parser.swiftdata.infrastructure.parser.SwiftCodeParserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

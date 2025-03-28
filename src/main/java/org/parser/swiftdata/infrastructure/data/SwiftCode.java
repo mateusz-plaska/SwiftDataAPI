@@ -1,4 +1,4 @@
-package org.parser.swiftdata.swift_codes.data;
+package org.parser.swiftdata.infrastructure.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

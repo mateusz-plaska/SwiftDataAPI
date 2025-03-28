@@ -1,4 +1,4 @@
-package org.parser.swiftdata.swift_codes.data;
+package org.parser.swiftdata.infrastructure.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
