@@ -13,12 +13,6 @@ import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 import org.springframework.stereotype.Service;
 
-// tests
-// docker
-// warunek w 1 endpoint
-// zwracanie message
-// autowired in controller
-// initParser in different class (how should it work)
 
 @Service
 @Slf4j

@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: swift-data-spring-boot-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - DATA_FILE_PATH=/app/data/2025_SWIFT_CODES.csv
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.4
+    container_name: swift-data-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+

@@ -17,9 +17,9 @@ public class SwiftDataApplication {
 
     @Bean
     public CommandLineRunner loadSwiftData(
-            SwiftCodeParserService swiftCodeParserService, @Value("${data.filepath}") String dataFilepath) {
+            SwiftCodeParserService swiftCodeParserService, @Value("${data.file.path}") String dataFilePath) {
         return (args) -> {
-            swiftCodeParserService.parseAndStoreSwiftCodes(new File(dataFilepath));
+            swiftCodeParserService.parseAndStoreSwiftCodes(new File(dataFilePath));
         };
     }
 }

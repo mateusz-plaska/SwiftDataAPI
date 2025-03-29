@@ -11,7 +11,7 @@
   <groupId>org.parser</groupId>
   <artifactId>swift-data</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Swift data</name>
+  <name>swift-data</name>
   <description>Swift data parser</description>
   <url/>
   <licenses>
@@ -126,6 +126,7 @@
   </dependencies>
 
   <build>
+    <finalName>swift-data</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
