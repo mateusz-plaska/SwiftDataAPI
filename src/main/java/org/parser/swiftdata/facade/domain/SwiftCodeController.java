@@ -56,4 +56,10 @@ class SwiftCodeController {
         return handleResult(
                 swiftCodeService.addSwiftCode(swiftCodeRequest), HttpStatus.CREATED, request.getRequestURI());
     }
+
+    @DeleteMapping("/{swift-code}")
+    public ResponseEntity<String> deleteSwiftCode(
+            @PathVariable("swift-code") String swiftCodeId, HttpServletRequest request) {
+        return handleResult(swiftCodeService.deleteSwiftCode(swiftCodeId), HttpStatus.OK, request.getRequestURI());
+    }
 }

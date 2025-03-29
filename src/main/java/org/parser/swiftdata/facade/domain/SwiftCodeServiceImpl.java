@@ -13,12 +13,12 @@ import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 import org.springframework.stereotype.Service;
 
-// delete
 // tests
 // docker
 // warunek w 1 endpoint
 // zwracanie message
 // autowired in controller
+// initParser in different class (how should it work)
 
 @Service
 @Slf4j
@@ -80,6 +80,11 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
 
     @Override
     public Result<String> deleteSwiftCode(String swiftCodeId) {
-        return null;
+        if (!repository.existsById(swiftCodeId)) {
+            return Result.failure(new SwiftCodeError.SwiftCodeNotFoundById(swiftCodeId));
+        }
+
+        repository.deleteById(swiftCodeId);
+        return Result.success("message: swift code deleted successfully");
     }
 }
