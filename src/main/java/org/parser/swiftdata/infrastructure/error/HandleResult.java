@@ -24,6 +24,11 @@ public class HandleResult {
         return new ResponseEntity<>(ow.writeValueAsString(errorWrapper), errorWrapper.occurredStatus());
     }
 
+    @SneakyThrows
+    public static ResponseEntity<String> handleError(ErrorWrapper errorWrapper) {
+        return new ResponseEntity<>(ow.writeValueAsString(errorWrapper), errorWrapper.occurredStatus());
+    }
+
     private static ErrorWrapper getInfoByError(Error error, String uri, HttpStatus onSuccess) {
         return switch (error) {
             case SwiftCodeError.SwiftCodeNotFoundById e -> new ErrorWrapper(
@@ -33,6 +38,8 @@ public class HandleResult {
                     onSuccess,
                     uri,
                     HttpStatus.NOT_FOUND);
+            case SwiftCodeError.SwiftCodeIdExists e -> new ErrorWrapper(
+                    "Swift code id: " + e.id() + " currently exists", onSuccess, uri, HttpStatus.CONFLICT);
         };
     }
 }

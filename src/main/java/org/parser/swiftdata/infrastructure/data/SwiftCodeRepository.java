@@ -10,4 +10,6 @@ public interface SwiftCodeRepository extends JpaRepository<SwiftCode, String> {
     List<SwiftCode> findByHeadquarterCode(String headquarterCode);
 
     List<SwiftCode> findByCountryISO2(String countryISO2);
+
+    boolean existsByCountryName(String countryName);
 }

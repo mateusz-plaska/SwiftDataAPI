@@ -7,22 +7,35 @@ import lombok.extern.slf4j.Slf4j;
 import org.parser.swiftdata.infrastructure.error.ErrorWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-@ControllerAdvice
+@RestControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
 class GlobalExceptionHandler {
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorWrapper> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String message = "Not valid argument";
+        ErrorWrapper errorWrapper =
+                new ErrorWrapper(message + "\n" + ex.getMessage(), status, request.getRequestURI(), status);
+        logError(ex.getMessage(), request.getRequestURI(), ex);
+        return new ResponseEntity<>(errorWrapper, status);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorWrapper> handleGeneralException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorWrapper> handleGeneralException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         String message = "An error has occurred.";
         ErrorWrapper errorWrapper = new ErrorWrapper(message, status, request.getRequestURI(), status);
+        logError(ex.getMessage(), request.getRequestURI(), ex);
         return new ResponseEntity<>(errorWrapper, status);
     }
 

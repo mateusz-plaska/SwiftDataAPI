@@ -6,11 +6,19 @@ import org.parser.swiftdata.facade.SwiftCodeService;
 import org.parser.swiftdata.facade.dto.CountrySwiftCodesResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeBranchResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeHeadquarterResponse;
+import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
 import org.parser.swiftdata.infrastructure.data.SwiftCode;
 import org.parser.swiftdata.infrastructure.data.SwiftCodeRepository;
 import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 import org.springframework.stereotype.Service;
+
+// delete
+// tests
+// docker
+// warunek w 1 endpoint
+// zwracanie message
+// autowired in controller
 
 @Service
 @Slf4j
@@ -44,5 +52,34 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
 
         String countryName = swiftCodes.getFirst().getCountryName();
         return Result.success(new CountrySwiftCodesResponse(countryISO2, countryName, swiftCodes));
+    }
+
+    @Override
+    public Result<String> addSwiftCode(SwiftCodeRequest swiftCodeRequest) {
+        if (repository.existsById(swiftCodeRequest.getSwiftCode())) {
+            return Result.failure(new SwiftCodeError.SwiftCodeIdExists(swiftCodeRequest.getSwiftCode()));
+        }
+
+        if (swiftCodeRequest.getIsHeadquarter() == null) {
+            swiftCodeRequest.setIsHeadquarter(swiftCodeRequest.getSwiftCode().endsWith("XXX"));
+        }
+
+        SwiftCode createdSwiftCode = new SwiftCode(
+                swiftCodeRequest.getSwiftCode(),
+                swiftCodeRequest.getBankName(),
+                swiftCodeRequest.getAddress(),
+                swiftCodeRequest.getCountryISO2(),
+                swiftCodeRequest.getCountryName(),
+                swiftCodeRequest.getIsHeadquarter(),
+                swiftCodeRequest.getSwiftCode().substring(0, 8));
+
+        repository.save(createdSwiftCode);
+
+        return Result.success("message: swift code created successfully");
+    }
+
+    @Override
+    public Result<String> deleteSwiftCode(String swiftCodeId) {
+        return null;
     }
 }
