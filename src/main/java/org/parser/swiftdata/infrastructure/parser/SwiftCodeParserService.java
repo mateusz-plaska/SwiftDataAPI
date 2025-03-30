@@ -28,7 +28,12 @@ public class SwiftCodeParserService {
 
             String[] headers = csvReader.readNextSilently();
             while ((record = csvReader.readNext()) != null) {
-                storeSwiftCodeRecord(record);
+                try {
+                    storeSwiftCodeRecord(record);
+                } catch (Exception e) {
+                    log.error("Error parsing record {}: {}. Skipping this record.",
+                            String.join(",", record), e.getMessage());
+                }
             }
         } catch (IOException | CsvValidationException e) {
             e.printStackTrace();

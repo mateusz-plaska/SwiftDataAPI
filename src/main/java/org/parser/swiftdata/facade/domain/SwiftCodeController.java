@@ -13,6 +13,7 @@ import org.parser.swiftdata.infrastructure.error.ErrorWrapper;
 import org.parser.swiftdata.infrastructure.validator.SwiftCodeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -28,20 +29,20 @@ class SwiftCodeController {
     @Autowired
     private SwiftCodeValidator swiftCodeValidator;
 
-    @GetMapping("/{swift-code}")
+    @GetMapping(path = "/{swift-code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getSwiftCodeById(
             @PathVariable("swift-code") String swiftCodeId, HttpServletRequest request) {
         return handleResult(swiftCodeService.getSwiftCodeById(swiftCodeId), HttpStatus.OK, request.getRequestURI());
     }
 
-    @GetMapping("/country/{countryISO2code}")
+    @GetMapping(path = "/country/{countryISO2code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getSwiftCodesByCountry(
             @PathVariable String countryISO2code, HttpServletRequest request) {
         return handleResult(
                 swiftCodeService.getSwiftCodesByCountry(countryISO2code), HttpStatus.OK, request.getRequestURI());
     }
 
-    @PostMapping("/")
+    @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createSwiftCode(
             @Valid @RequestBody SwiftCodeRequest swiftCodeRequest, HttpServletRequest request) {
         Errors errors = new BeanPropertyBindingResult(swiftCodeRequest, "swiftCode");
@@ -57,7 +58,7 @@ class SwiftCodeController {
                 swiftCodeService.addSwiftCode(swiftCodeRequest), HttpStatus.CREATED, request.getRequestURI());
     }
 
-    @DeleteMapping("/{swift-code}")
+    @DeleteMapping(path = "/{swift-code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteSwiftCode(
             @PathVariable("swift-code") String swiftCodeId, HttpServletRequest request) {
         return handleResult(swiftCodeService.deleteSwiftCode(swiftCodeId), HttpStatus.OK, request.getRequestURI());
