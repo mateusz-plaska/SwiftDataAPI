@@ -1,7 +1,7 @@
 package org.parser.swiftdata.facade.dto;
 
 import lombok.Getter;
-import org.parser.swiftdata.infrastructure.data.SwiftCode;
+import org.parser.swiftdata.facade.domain.SwiftCode;
 
 @Getter
 public class SwiftCodeBranchResponse {

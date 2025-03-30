@@ -7,8 +7,8 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.parser.swiftdata.infrastructure.data.SwiftCode;
-import org.parser.swiftdata.infrastructure.data.SwiftCodeRepository;
+import org.parser.swiftdata.facade.domain.SwiftCode;
+import org.parser.swiftdata.facade.domain.SwiftCodeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,8 +31,10 @@ public class SwiftCodeParserService {
                 try {
                     storeSwiftCodeRecord(record);
                 } catch (Exception e) {
-                    log.error("Error parsing record {}: {}. Skipping this record.",
-                            String.join(",", record), e.getMessage());
+                    log.error(
+                            "Error parsing record {}: {}. Skipping this record.",
+                            String.join(",", record),
+                            e.getMessage());
                 }
             }
         } catch (IOException | CsvValidationException e) {

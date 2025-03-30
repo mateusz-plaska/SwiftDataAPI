@@ -3,7 +3,7 @@ package org.parser.swiftdata.facade.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import org.parser.swiftdata.infrastructure.data.SwiftCode;
+import org.parser.swiftdata.facade.domain.SwiftCode;
 
 @Getter
 public class CountrySwiftCodesResponse {

@@ -7,12 +7,9 @@ import org.parser.swiftdata.facade.dto.CountrySwiftCodesResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeBranchResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeHeadquarterResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
-import org.parser.swiftdata.infrastructure.data.SwiftCode;
-import org.parser.swiftdata.infrastructure.data.SwiftCodeRepository;
 import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @Slf4j

@@ -1,4 +1,4 @@
-package org.parser.swiftdata.infrastructure.data;
+package org.parser.swiftdata.facade.domain;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
