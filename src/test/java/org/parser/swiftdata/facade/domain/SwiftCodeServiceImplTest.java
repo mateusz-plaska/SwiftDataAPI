@@ -177,25 +177,86 @@ public class SwiftCodeServiceImplTest {
     // deleteSwiftCode()
 
     @Test
-    void deleteSwiftCode_deletesRecord_whenRecordExists() {
+    void deleteSwiftCode_deletesSingleRecord_whenRecordExists() {
         // given
-        String swiftCodeId = "TEST1234XXX";
-        when(repository.existsById(swiftCodeId)).thenReturn(true);
+        String swiftCodeId = "TEST1234XXY";
+        SwiftCode swiftCode = SwiftCode.builder()
+                .swiftCode(swiftCodeId)
+                .bankName("BankName")
+                .address("Address")
+                .countryISO2("US")
+                .countryName("USA")
+                .isHeadquarter(false)
+                .headquarterCode("TEST1234")
+                .build();
+        when(repository.findById(swiftCodeId)).thenReturn(Optional.of(swiftCode));
 
         // when
         Result<ApiResponse> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
 
         // then
         assertTrue(result.isSuccess());
-        assertEquals("swift code deleted successfully", result.getData().message());
-        verify(repository, times(1)).deleteById(swiftCodeId);
+        assertEquals(
+                "swift code deleted successfully, deleted 1 record(s)",
+                result.getData().message());
+
+        verify(repository, times(1)).deleteAllById(List.of(swiftCodeId));
+    }
+
+    @Test
+    void deleteSwiftCode_deletesHeadquarterAndBranches_whenRecordIsHeadquarter() {
+        // given
+        String headquarterId = "12345678XXX";
+        String headquarterCode = "12345678";
+        SwiftCode headquarter = SwiftCode.builder()
+                .swiftCode(headquarterId)
+                .bankName("Main Bank")
+                .address("HQ Address")
+                .countryISO2("US")
+                .countryName("USA")
+                .isHeadquarter(true)
+                .headquarterCode(headquarterCode)
+                .build();
+        SwiftCode branch1 = SwiftCode.builder()
+                .swiftCode("12345678YY1")
+                .bankName("Branch1")
+                .address("Address1")
+                .countryISO2("US")
+                .countryName("USA")
+                .isHeadquarter(false)
+                .headquarterCode(headquarterCode)
+                .build();
+        SwiftCode branch2 = SwiftCode.builder()
+                .swiftCode("12345678YY2")
+                .bankName("Branch2")
+                .address("Address2")
+                .countryISO2("US")
+                .countryName("USA")
+                .isHeadquarter(false)
+                .headquarterCode(headquarterCode)
+                .build();
+
+        when(repository.findById(headquarterId)).thenReturn(Optional.of(headquarter));
+        when(repository.findByHeadquarterCode(headquarterCode)).thenReturn(List.of(headquarter, branch1, branch2));
+
+        // when
+        Result<ApiResponse> result = swiftCodeService.deleteSwiftCode(headquarterId);
+
+        // then
+        assertTrue(result.isSuccess());
+        assertEquals(
+                "swift code deleted successfully, deleted 3 record(s)",
+                result.getData().message());
+
+        verify(repository, times(1))
+                .deleteAllById(List.of(headquarterId, branch1.getSwiftCode(), branch2.getSwiftCode()));
     }
 
     @Test
     void deleteSwiftCode_returnsFailure_whenRecordNotFound() {
         // given
         String swiftCodeId = "NONEXISTENT";
-        when(repository.existsById(swiftCodeId)).thenReturn(false);
+        when(repository.findById(swiftCodeId)).thenReturn(Optional.empty());
 
         // when
         Result<ApiResponse> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
@@ -204,5 +265,7 @@ public class SwiftCodeServiceImplTest {
         assertFalse(result.isSuccess());
         assertNotNull(result.getError());
         assertInstanceOf(SwiftCodeError.SwiftCodeNotFoundById.class, result.getError());
+
+        verify(repository, never()).deleteAllById(any());
     }
 }
