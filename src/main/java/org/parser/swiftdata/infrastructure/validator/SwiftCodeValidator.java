@@ -2,9 +2,9 @@ package org.parser.swiftdata.infrastructure.validator;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
 import org.parser.swiftdata.facade.domain.SwiftCode;
 import org.parser.swiftdata.facade.domain.SwiftCodeRepository;
+import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

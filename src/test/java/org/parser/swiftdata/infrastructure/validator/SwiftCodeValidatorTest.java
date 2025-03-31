@@ -10,9 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
 import org.parser.swiftdata.facade.domain.SwiftCode;
 import org.parser.swiftdata.facade.domain.SwiftCodeRepository;
+import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 

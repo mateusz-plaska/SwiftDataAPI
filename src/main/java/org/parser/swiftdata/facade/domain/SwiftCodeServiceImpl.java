@@ -59,8 +59,8 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
                 swiftCodeRequest.getSwiftCode(),
                 swiftCodeRequest.getBankName(),
                 swiftCodeRequest.getAddress(),
-                swiftCodeRequest.getCountryISO2(),
-                swiftCodeRequest.getCountryName(),
+                swiftCodeRequest.getCountryISO2().toUpperCase(),
+                swiftCodeRequest.getCountryName().toUpperCase(),
                 swiftCodeRequest.getIsHeadquarter(),
                 swiftCodeRequest.getSwiftCode().substring(0, 8));
 

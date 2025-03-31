@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "swift_codes")
+@Table(
+        name = "swift_codes",
+        indexes = {
+            @Index(name = "idx_country_iso2", columnList = "country_iso2"),
+            @Index(name = "idx_headquarter_code", columnList = "headquarter_code")
+        })
 @Getter
 @Setter
 @Builder
