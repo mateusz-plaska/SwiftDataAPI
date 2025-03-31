@@ -1,6 +1,8 @@
 package org.parser.swiftdata.facade.domain;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.parser.swiftdata.facade.SwiftCodeService;
 import org.parser.swiftdata.facade.dto.*;
@@ -10,10 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCodeService {
+@RequiredArgsConstructor
+class SwiftCodeServiceImpl implements SwiftCodeService {
 
-    // jesli centralna nie jest oddziałem to w headquarter_code centrali mamy puste pule a tu pobieramy
-    // 8 pierwszych znakow z ID
+    private final SwiftCodeRepository repository;
+
     @Override
     public Result<SwiftCodeBranchResponse> getSwiftCodeById(String swiftCodeId) {
         SwiftCode swiftCode = repository.findById(swiftCodeId).orElse(null);
@@ -43,6 +46,7 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
     }
 
     @Override
+    @Transactional
     public Result<ApiResponse> addSwiftCode(SwiftCodeRequest swiftCodeRequest) {
         if (repository.existsById(swiftCodeRequest.getSwiftCode())) {
             return Result.failure(new SwiftCodeError.SwiftCodeIdExists(swiftCodeRequest.getSwiftCode()));
@@ -66,12 +70,24 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
     }
 
     @Override
+    @Transactional
     public Result<ApiResponse> deleteSwiftCode(String swiftCodeId) {
-        if (!repository.existsById(swiftCodeId)) {
+        SwiftCode swiftCodeToDelete = repository.findById(swiftCodeId).orElse(null);
+        if (swiftCodeToDelete == null) {
             return Result.failure(new SwiftCodeError.SwiftCodeNotFoundById(swiftCodeId));
         }
 
-        repository.deleteById(swiftCodeId);
-        return Result.success(new ApiResponse("swift code deleted successfully"));
+        List<String> toDeleteIds = List.of(swiftCodeToDelete.getSwiftCode());
+
+        if (swiftCodeToDelete.isHeadquarter()) {
+            List<SwiftCode> swiftCodesToDelete =
+                    repository.findByHeadquarterCode(swiftCodeToDelete.getHeadquarterCode());
+            toDeleteIds =
+                    swiftCodesToDelete.stream().map(SwiftCode::getSwiftCode).toList();
+        }
+
+        repository.deleteAllById(toDeleteIds);
+        return Result.success(new ApiResponse(
+                String.format("swift code deleted successfully, deleted %d record(s)", toDeleteIds.size())));
     }
 }
