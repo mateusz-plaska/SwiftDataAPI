@@ -13,10 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.parser.swiftdata.facade.dto.CountrySwiftCodesResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeBranchResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeHeadquarterResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
+import org.parser.swiftdata.facade.dto.*;
 import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 
@@ -47,7 +44,7 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void getSwiftCodeById_returnsSuccess_whenSwiftCodeIsHeadquarter() {
-        // Given
+        // given
         String swiftCodeId = "COBANK12XXX";
         SwiftCode headquarter = new SwiftCode(swiftCodeId, "Bank HQ", "HQ Address", "PL", "Poland", true, "COBANK12");
         List<SwiftCode> branches = List.of(
@@ -56,10 +53,10 @@ public class SwiftCodeServiceImplTest {
         when(repository.findById(swiftCodeId)).thenReturn(Optional.of(headquarter));
         when(repository.findByHeadquarterCode("COBANK12")).thenReturn(branches);
 
-        // When
+        // when
         Result<?> result = swiftCodeService.getSwiftCodeById(swiftCodeId);
 
-        // Then
+        // then
         assertTrue(result.isSuccess());
         Object data = result.getData();
         assertNotNull(data);
@@ -71,16 +68,16 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void getSwiftCodeById_returnsSuccess_whenSwiftCodeIsBranch() {
-        // Given
+        // given
         String swiftCodeId = "BRANCH12345";
         SwiftCode branch =
                 new SwiftCode(swiftCodeId, "Bank Branch", "Branch Address", "PL", "Poland", false, "HQ000011");
         when(repository.findById(swiftCodeId)).thenReturn(Optional.of(branch));
 
-        // When
+        // when
         Result<?> result = swiftCodeService.getSwiftCodeById(swiftCodeId);
 
-        // Then
+        // then
         assertTrue(result.isSuccess());
         Object data = result.getData();
         assertNotNull(data);
@@ -91,14 +88,14 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void getSwiftCodeById_returnsFailure_whenSwiftCodeNotFound() {
-        // Given
+        // given
         String swiftCodeId = "NONEXISTENT";
         when(repository.findById(swiftCodeId)).thenReturn(Optional.empty());
 
-        // When
+        // when
         Result<?> result = swiftCodeService.getSwiftCodeById(swiftCodeId);
 
-        // Then
+        // then
         assertFalse(result.isSuccess());
         assertNotNull(result.getError());
         assertInstanceOf(SwiftCodeError.SwiftCodeNotFoundById.class, result.getError());
@@ -108,7 +105,7 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void getSwiftCodesByCountry_returnsSuccess_whenRecordsExist() {
-        // Given
+        // given
         String countryISO2 = "PL";
         SwiftCode record1 =
                 new SwiftCode("CODE1234XXX", "Bank One", "Addr One", countryISO2, "Poland", true, "CODE1234");
@@ -116,10 +113,10 @@ public class SwiftCodeServiceImplTest {
                 new SwiftCode("CODE1234YYY", "Bank Two", "Addr Two", countryISO2, "Poland", false, "CODE1234");
         when(repository.findByCountryISO2(countryISO2)).thenReturn(List.of(record1, record2));
 
-        // When
+        // when
         Result<?> result = swiftCodeService.getSwiftCodesByCountry(countryISO2);
 
-        // Then
+        // then
         assertTrue(result.isSuccess());
         Object data = result.getData();
         assertNotNull(data);
@@ -132,14 +129,14 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void getSwiftCodesByCountry_returnsFailure_whenNoRecordsExist() {
-        // Given
+        // given
         String countryISO2 = "US";
         when(repository.findByCountryISO2(countryISO2)).thenReturn(Collections.emptyList());
 
-        // When
+        // when
         Result<?> result = swiftCodeService.getSwiftCodesByCountry(countryISO2);
 
-        // Then
+        // then
         assertFalse(result.isSuccess());
         assertNotNull(result.getError());
         assertInstanceOf(SwiftCodeError.CountryNotFoundByCountryISO2.class, result.getError());
@@ -149,29 +146,29 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void addSwiftCode_returnsSuccess_whenRequestIsValid() {
-        // Given
+        // given
         when(repository.existsById(validRequest.getSwiftCode())).thenReturn(false);
         when(repository.save(any(SwiftCode.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
-        Result<String> result = swiftCodeService.addSwiftCode(validRequest);
+        // when
+        Result<ApiResponse> result = swiftCodeService.addSwiftCode(validRequest);
 
-        // Then
+        // then
         assertTrue(result.isSuccess());
-        assertEquals("message: swift code created successfully", result.getData());
+        assertEquals("swift code created successfully", result.getData().message());
         verify(repository, times(1)).save(any(SwiftCode.class));
         verify(repository, times(1)).save(argThat(SwiftCode::isHeadquarter));
     }
 
     @Test
     void addSwiftCode_returnsFailure_whenSwiftCodeAlreadyExists() {
-        // Given
+        // given
         when(repository.existsById(validRequest.getSwiftCode())).thenReturn(true);
 
-        // When
-        Result<String> result = swiftCodeService.addSwiftCode(validRequest);
+        // when
+        Result<ApiResponse> result = swiftCodeService.addSwiftCode(validRequest);
 
-        // Then
+        // then
         assertFalse(result.isSuccess());
         assertNotNull(result.getError());
         assertInstanceOf(SwiftCodeError.SwiftCodeIdExists.class, result.getError());
@@ -181,29 +178,29 @@ public class SwiftCodeServiceImplTest {
 
     @Test
     void deleteSwiftCode_deletesRecord_whenRecordExists() {
-        // Given
+        // given
         String swiftCodeId = "TEST1234XXX";
         when(repository.existsById(swiftCodeId)).thenReturn(true);
 
-        // When
-        Result<String> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
+        // when
+        Result<ApiResponse> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
 
-        // Then
+        // then
         assertTrue(result.isSuccess());
-        assertEquals("message: swift code deleted successfully", result.getData());
+        assertEquals("swift code deleted successfully", result.getData().message());
         verify(repository, times(1)).deleteById(swiftCodeId);
     }
 
     @Test
     void deleteSwiftCode_returnsFailure_whenRecordNotFound() {
-        // Given
+        // given
         String swiftCodeId = "NONEXISTENT";
         when(repository.existsById(swiftCodeId)).thenReturn(false);
 
-        // When
-        Result<String> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
+        // when
+        Result<ApiResponse> result = swiftCodeService.deleteSwiftCode(swiftCodeId);
 
-        // Then
+        // then
         assertFalse(result.isSuccess());
         assertNotNull(result.getError());
         assertInstanceOf(SwiftCodeError.SwiftCodeNotFoundById.class, result.getError());

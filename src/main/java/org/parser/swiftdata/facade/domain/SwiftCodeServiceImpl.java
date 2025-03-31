@@ -3,10 +3,7 @@ package org.parser.swiftdata.facade.domain;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.parser.swiftdata.facade.SwiftCodeService;
-import org.parser.swiftdata.facade.dto.CountrySwiftCodesResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeBranchResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeHeadquarterResponse;
-import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
+import org.parser.swiftdata.facade.dto.*;
 import org.parser.swiftdata.infrastructure.error.Result;
 import org.parser.swiftdata.infrastructure.error.SwiftCodeError;
 import org.springframework.stereotype.Service;
@@ -46,7 +43,7 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
     }
 
     @Override
-    public Result<String> addSwiftCode(SwiftCodeRequest swiftCodeRequest) {
+    public Result<ApiResponse> addSwiftCode(SwiftCodeRequest swiftCodeRequest) {
         if (repository.existsById(swiftCodeRequest.getSwiftCode())) {
             return Result.failure(new SwiftCodeError.SwiftCodeIdExists(swiftCodeRequest.getSwiftCode()));
         }
@@ -65,17 +62,16 @@ record SwiftCodeServiceImpl(SwiftCodeRepository repository) implements SwiftCode
                 swiftCodeRequest.getSwiftCode().substring(0, 8));
 
         repository.save(createdSwiftCode);
-
-        return Result.success("message: swift code created successfully");
+        return Result.success(new ApiResponse("swift code created successfully"));
     }
 
     @Override
-    public Result<String> deleteSwiftCode(String swiftCodeId) {
+    public Result<ApiResponse> deleteSwiftCode(String swiftCodeId) {
         if (!repository.existsById(swiftCodeId)) {
             return Result.failure(new SwiftCodeError.SwiftCodeNotFoundById(swiftCodeId));
         }
 
         repository.deleteById(swiftCodeId);
-        return Result.success("message: swift code deleted successfully");
+        return Result.success(new ApiResponse("swift code deleted successfully"));
     }
 }

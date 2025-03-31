@@ -1,5 +1,6 @@
 package org.parser.swiftdata.facade;
 
+import org.parser.swiftdata.facade.dto.ApiResponse;
 import org.parser.swiftdata.facade.dto.CountrySwiftCodesResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeBranchResponse;
 import org.parser.swiftdata.facade.dto.SwiftCodeRequest;
@@ -11,7 +12,7 @@ public interface SwiftCodeService {
 
     Result<CountrySwiftCodesResponse> getSwiftCodesByCountry(String countryISO2);
 
-    Result<String> addSwiftCode(SwiftCodeRequest swiftCodeRequest);
+    Result<ApiResponse> addSwiftCode(SwiftCodeRequest swiftCodeRequest);
 
-    Result<String> deleteSwiftCode(String swiftCodeId);
+    Result<ApiResponse> deleteSwiftCode(String swiftCodeId);
 }
