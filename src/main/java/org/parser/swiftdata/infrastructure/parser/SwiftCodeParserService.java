@@ -55,9 +55,9 @@ class SwiftCodeParserService {
     }
 
     private void storeSwiftCodeRecord(String[] record) {
-        String swiftCode = record[1];
-        String bankName = record[3];
-        String address = record[4];
+        String swiftCode = record[1].trim();
+        String bankName = record[3].trim();
+        String address = record[4].trim();
         String countryIso2 = record[0].toUpperCase().trim();
         String countryName = record[6].toUpperCase().trim();
 
