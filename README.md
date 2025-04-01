@@ -1,16 +1,5 @@
 # Swift Data API
 
-## Table of Contents
-- [About project](#about-project)
-- [Setup and Installation](#setup-and-installation)
-- [Running the application on Docker](#running-the-application-on-docker)
-- [Testing](#testing)
-- [Features](#features)
-- [API Endpoints](#api-endpoints)
-- [Assumptions and business logic](#assumptions-and-business-logic)
-- [Stack](#stack)
-
-
 ## 📌 About project
 Swift Data API is an application for managing SWIFT codes, allowing users to retrieve, add, and delete SWIFT codes stored in a database. The system also includes functionality to parse and store 
 SWIFT codes from a CSV file upon startup.
